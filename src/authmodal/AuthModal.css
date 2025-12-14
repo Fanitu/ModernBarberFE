@@ -1,0 +1,356 @@
+/* AuthModal.css */
+.auth-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.auth-modal-content {
+  background-color: var(--modal-bg, #ffffff);
+  border-radius: 16px;
+  padding: 32px;
+  width: 90%;
+  max-width: 450px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.auth-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-secondary, #666);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.auth-modal-close:hover {
+  background-color: var(--hover-bg, #f5f5f5);
+  color: var(--text-primary, #333);
+}
+
+.auth-modal-header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-modal-header h2 {
+  color: var(--text-primary, #333);
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.auth-modal-subtitle {
+  color: var(--text-secondary, #666);
+  font-size: 14px;
+  margin: 0;
+}
+
+.auth-error-message {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.error-icon {
+  font-size: 16px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  color: var(--text-primary, #333);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-group input {
+  padding: 12px 16px;
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s;
+  background-color: var(--input-bg, #ffffff);
+  color: var(--text-primary, #333);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-color, #3b82f6);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.form-group input.error {
+  border-color: #dc3545;
+}
+
+.form-group input.error:focus {
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+.form-group input:disabled {
+  background-color: var(--disabled-bg, #f5f5f5);
+  cursor: not-allowed;
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.auth-submit-btn {
+  background-color: var(--primary-color, #3b82f6);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 48px;
+}
+
+.auth-submit-btn:hover:not(:disabled) {
+  background-color: var(--primary-hover, #2563eb);
+  transform: translateY(-1px);
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.auth-modal-footer {
+  text-align: center;
+  margin: 24px 0;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color, #e0e0e0);
+}
+
+.auth-modal-footer p {
+  color: var(--text-secondary, #666);
+  font-size: 14px;
+  margin: 0;
+}
+
+.auth-switch-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color, #3b82f6);
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 8px;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.auth-switch-btn:hover:not(:disabled) {
+  background-color: rgba(59, 130, 246, 0.1);
+}
+
+.auth-switch-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  margin: 24px 0;
+  color: var(--text-secondary, #666);
+  font-size: 14px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--border-color, #e0e0e0);
+}
+
+.auth-divider span {
+  padding: 0 16px;
+}
+
+.auth-social-login {
+  text-align: center;
+}
+
+.social-login-title {
+  color: var(--text-secondary, #666);
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.social-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.social-btn {
+  padding: 12px 24px;
+  border: 1px solid var(--border-color, #e0e0e0);
+  border-radius: 8px;
+  background-color: var(--input-bg, #ffffff);
+  color: var(--text-primary, #333);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.social-btn:hover:not(:disabled) {
+  background-color: var(--hover-bg, #f5f5f5);
+  transform: translateY(-1px);
+}
+
+.social-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.google-btn {
+  border-color: #4285F4;
+}
+
+.google-btn:hover {
+  background-color: rgba(66, 133, 244, 0.1);
+}
+
+.facebook-btn {
+  border-color: #1877F2;
+}
+
+.facebook-btn:hover {
+  background-color: rgba(24, 119, 242, 0.1);
+}
+
+.social-icon {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.google-icon {
+  color: #4285F4;
+}
+
+.facebook-icon {
+  color: #1877F2;
+}
+
+/* Dark theme styles */
+.dark .auth-modal-content {
+  --modal-bg: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --border-color: #404040;
+  --input-bg: #2a2a2a;
+  --hover-bg: #2a2a2a;
+  --primary-color: #3b82f6;
+  --primary-hover: #60a5fa;
+  --disabled-bg: #333333;
+}
+
+.dark .form-group input {
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+}
+
+.dark .form-group input::placeholder {
+  color: var(--text-secondary);
+}
+
+.dark .social-btn {
+  background-color: var(--input-bg);
+  color: var(--text-primary);
+}
+
+.dark .google-btn:hover {
+  background-color: rgba(66, 133, 244, 0.2);
+}
+
+.dark .facebook-btn:hover {
+  background-color: rgba(24, 119, 242, 0.2);
+}
