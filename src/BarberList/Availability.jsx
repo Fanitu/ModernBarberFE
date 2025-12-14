@@ -1,31 +1,42 @@
-import React,{useState,useEffect} from "react";
-import { bookingAPI,barberAPI } from "../apiServece/apiService.jsx"
+import React, { useState, useEffect } from "react";
+import { bookingAPI, barberAPI } from "../apiServece/apiService.jsx"
+import './Availability.css'; // We'll create this CSS file
 
-const Availability = ({ barber, service, onBook }) => {
+const Availability = ({ barber, service, onBook, onBack }) => {
   const [availableSlots, setAvailableSlots] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  console.log(selectedDate);
 
   useEffect(() => {
     if (barber && service) {
       fetchAvailability();
     }
-  }, [barber, service]);
+  }, [barber, service, selectedDate]);
 
   const fetchAvailability = async () => {
     setLoading(true);
+    setError(null);
+    setSelectedSlot(null);
     try {
-      const today = new Date().toISOString().split('T')[0];
+      const dateString = selectedDate.toISOString().split('T')[0];
       const response = await barberAPI.getAvailability(
         barber._id,
-        today,
+        dateString,
         service.duration
       );
-      console.log(response.data);
-      console.log(response.data.data.availableTimes)
-      setAvailableSlots(response.data.data.availableTimes || []);
+      
+      if (response.data?.data?.availableTimes) {
+        setAvailableSlots(response.data.data.availableTimes);
+      } else {
+        setAvailableSlots([]);
+      }
     } catch (error) {
       console.error('Error fetching availability:', error);
+      setError('Failed to load available time slots. Please try again.');
+      setAvailableSlots([]);
     } finally {
       setLoading(false);
     }
@@ -35,49 +46,246 @@ const Availability = ({ barber, service, onBook }) => {
     if (!selectedSlot) return;
     
     try {
-      const validationData = {
+      const bookingData = {
         barberId: barber._id,
-        date: new Date().toISOString().split('T')[0],
+        bookingDate: selectedDate.toISOString().split('T')[0],
         startTime: selectedSlot.startTime,
-        serviceDuration: service.duration
+        service: {
+          name: service.name,
+          duration: service.duration,
+          price: service.price,
+          serviceId: service._id
+        },
+        barberName: barber.user.name,
+        serviceName: service.name
       };
       
-      await barberAPI.validateAvailability(validationData);
-      onBook(validationData);
+      await barberAPI.validateAvailability({
+        barberId: barber._id,
+        date: bookingData.bookingDate,
+        startTime: bookingData.startTime,
+        serviceDuration: service.duration
+      });
+      
+      onBook(bookingData);
     } catch (error) {
       console.error('Validation failed:', error);
+      alert('This time slot is no longer available. Please select another slot.');
+      fetchAvailability();
     }
   };
 
+  const formatDate = (date) => {
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const getNextDays = () => {
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() + i);
+      days.push(date);
+    }
+    return days;
+  };
+
+  const formatTime = (timeString) => {
+    const [hours, minutes] = timeString.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const displayHour = hour % 12 || 12;
+    return `${displayHour}:${minutes} ${ampm}`;
+  };
+
   return (
-    <div className="availability">
-      <h3>Available Times for {service.name}</h3>
-      {loading ? (
-        <div className="loading">Loading available slots...</div>
-      ) : (
-        <div className="time-slots">
-          {availableSlots.map((slot, index) => (
-            <div 
-              key={index}
-              className={`time-slot ${selectedSlot === slot ? 'selected' : ''}`}
-              onClick={() => setSelectedSlot(slot)}
-            >
-              <span>{slot.startTime} - {slot.endTime}</span>
-              <button 
-                className="book-slot-btn"
-                onClick={() => setSelectedSlot(slot)}
+    <div className="availability-container">
+      <div className="availability-header">
+        <button 
+          className="back-to-services-btn"
+          onClick={onBack}
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Back to Services
+        </button>
+        
+        <div className="availability-title-section">
+          <h2>Select Appointment Time</h2>
+          <div className="service-info-card">
+            <div className="barber-avatar">
+              {barber.user.name.charAt(0)}
+            </div>
+            <div className="service-details">
+              <h3>{service.name}</h3>
+              <p className="barber-name">with {barber.user.name}</p>
+              <div className="service-meta">
+                <span className="duration-badge">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  {service.duration} min
+                </span>
+                <span className="price-tag">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                  </svg>
+                  {service.price} Birr
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="availability-content">
+        <div className="date-selector-section">
+          <h3>Select Date</h3>
+          <div className="date-scroller">
+            {getNextDays().map((date, index) => (
+              <button
+                key={index}
+                className={`date-option ${
+                  date.toDateString() === selectedDate.toDateString() ? 'selected' : ''
+                }`}
+                onClick={() => setSelectedDate(date)}
               >
-                Select
+                <div className="date-day">{date.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+                <div className="date-number">{date.getDate()}</div>
+                <div className="date-month">{date.toLocaleDateString('en-US', { month: 'short' })}</div>
+              </button>
+            ))}
+          </div>
+          <div className="selected-date-display">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            {formatDate(selectedDate)}
+          </div>
+        </div>
+
+        <div className="time-slots-section">
+          <div className="section-header">
+            <h3>Available Time Slots</h3>
+            <button 
+              className="refresh-btn"
+              onClick={fetchAvailability}
+              disabled={loading}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M23 4v6h-6M1 20v-6h6"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+              </svg>
+              Refresh
+            </button>
+          </div>
+
+          {error && (
+            <div className="error-card">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <p>{error}</p>
+              <button onClick={fetchAvailability} className="retry-btn">
+                Try Again
               </button>
             </div>
-          ))}
+          )}
+
+          {loading ? (
+            <div className="loading-state">
+              <div className="spinner"></div>
+              <p>Loading available slots...</p>
+            </div>
+          ) : availableSlots.length === 0 ? (
+            <div className="empty-state">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="8" y1="12" x2="16" y2="12"/>
+              </svg>
+              <h4>No Available Slots</h4>
+              <p>There are no available time slots for {formatDate(selectedDate)}.</p>
+              <p>Please try another date.</p>
+            </div>
+          ) : (
+            <>
+              <div className="time-grid">
+                {availableSlots.map((slot, index) => (
+                  <button
+                    key={index}
+                    className={`time-slot-card ${
+                      selectedSlot?.startTime === slot.startTime ? 'selected' : ''
+                    }`}
+                    onClick={() => setSelectedSlot(slot)}
+                  >
+                    <div className="time-slot-content">
+                      <span className="time-display">{formatTime(slot.startTime)}</span>
+                      <span className="time-duration">{formatTime(slot.endTime)}</span>
+                    </div>
+                    <div className="slot-indicator">
+                      {selectedSlot?.startTime === slot.startTime && (
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                          <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
-      )}
-      {selectedSlot && (
-        <button className="confirm-booking-btn" onClick={handleBook}>
-          Confirm Booking
-        </button>
-      )}
+
+        {selectedSlot && (
+          <div className="booking-summary-card">
+            <div className="summary-content">
+              <div className="selected-time-display">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <div>
+                  <div className="time-range">
+                    {formatTime(selectedSlot.startTime)} - {formatTime(selectedSlot.endTime)}
+                  </div>
+                  <div className="date-info">{formatDate(selectedDate)}</div>
+                </div>
+              </div>
+              <div className="service-summary">
+                <div>
+                  <strong>{service.name}</strong>
+                  <div className="summary-details">
+                    <span>{service.duration} min</span>
+                    <span>•</span>
+                    <span>{service.price} Birr</span>
+                  </div>
+                </div>
+                <button 
+                  className="confirm-booking-btn"
+                  onClick={handleBook}
+                >
+                  <span>Confirm Booking</span>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

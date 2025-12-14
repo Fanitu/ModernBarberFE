@@ -20,6 +20,7 @@ const ThemeContext = React.createContext();
 
 // Main App Component
 const App = () => {
+
   const [theme, setTheme] = useState('light');
   const [currentView, setCurrentView] = useState('home');
   const [showAccountSidebar, setShowAccountSidebar] = useState(false);
@@ -32,6 +33,7 @@ const App = () => {
   const [bookingData, setBookingData] = useState(null);
   const [language, setLanguage] = useState('english');
   const [user, setUser] = useState(null);
+  const [previousView, setPreviousView] = useState('home');
 
   // Check if user is logged in on mount
   useEffect(() => {
@@ -65,29 +67,34 @@ const App = () => {
     setCurrentView('barber-detail');
   };
 
-  const handleServiceSelect = (barber, service) => {
+/*   const handleServiceSelect = (barber, service) => {
     setSelectedBarber(barber);
     setSelectedService(service);
     setCurrentView('availability');
-  };
+  }; */
 
-  const handleBookTime = async (data) => {
-    // Check if user is authenticated before proceeding with booking
-    const token = localStorage.getItem('token');
-    
-    if (!token) {
-      // Show auth modal in signup mode (you can show login mode too)
-      setAuthMode('login');
-      setShowAuthModal(true);
-      // Store booking data to resume after authentication
-      setBookingData(data);
-      return;
-    }
-    
-    // User is authenticated, proceed with booking
-    setBookingData(data);
-    setShowBookingModal(true);
-  };
+  const handleBookTime = async (bookingData) => {
+  const token = localStorage.getItem('token');
+  
+  if (!token) {
+    setAuthMode('login');
+    setShowAuthModal(true);
+    // Store both booking data AND the barber/service info
+    setBookingData({
+      ...bookingData,
+      barberName: selectedBarber?.user?.name,
+      serviceName: selectedService?.name
+    });
+    return;
+  }
+  
+  setBookingData({
+    ...bookingData,
+    barberName: selectedBarber?.user?.name,
+    serviceName: selectedService?.name
+  });
+  setShowBookingModal(true);
+};
 
   const handleAuthSuccess = (userData) => {
     setUser(userData);
@@ -105,28 +112,48 @@ const App = () => {
     setShowAccountSidebar(false);
   };
 
-  const handleBookingConfirm = async () => {
-    if (!user) {
+  const handleBookingConfirm = async (completeBookingData) => {
+  if (!user) {
+    setAuthMode('login');
+    setShowAuthModal(true);
+    return;
+  }
+
+  try {
+    // Ensure data matches backend requirements
+    const bookingPayload = {
+      barberId: completeBookingData.barberId,
+      bookingdate: completeBookingData.bookingDate,
+      startTime: completeBookingData.startTime,
+      service: completeBookingData.service,
+      customerNote: completeBookingData.customerNote || ''
+    };
+    
+    await bookingAPI.create(bookingPayload);
+    
+    // Success is now handled in the BookingModal component
+    return Promise.resolve();
+  } catch (error) {
+    if (error.response?.status === 401) {
       setAuthMode('login');
       setShowAuthModal(true);
-      return;
+      throw error;
+    } else {
+      throw new Error(error.response?.data?.message || 'Failed to create booking');
     }
+  }
+};
 
-    try {
-      await bookingAPI.create(bookingData);
-      setShowBookingModal(false);
-      setCurrentView('home');
-      alert('Booking confirmed successfully!');
-    } catch (error) {
-      if (error.response?.status === 401) {
-        // Token expired or invalid, show auth modal
-        setAuthMode('login');
-        setShowAuthModal(true);
-      } else {
-        alert('Failed to create booking. Please try again.');
-      }
-    }
-  };
+const handleServiceSelect = (barber, service) => {
+  setSelectedBarber(barber);
+  setSelectedService(service);
+  setPreviousView(currentView); // Store current view
+  setCurrentView('availability');
+};
+
+const handleBackToServices = () => {
+  setCurrentView(previousView); // Go back to previous view
+};
 
   const translations = {
     english: {},
@@ -172,12 +199,13 @@ const App = () => {
           )}
 
           {currentView === 'availability' && selectedBarber && selectedService && (
-            <Availability 
-              barber={selectedBarber}
-              service={selectedService}
-              onBook={handleBookTime}
-            />
-          )}
+  <Availability 
+    barber={selectedBarber}
+    service={selectedService}
+    onBook={handleBookTime}
+    onBack={handleBackToServices}
+  />
+)}
         </main>
 
         <Footer />
@@ -197,13 +225,19 @@ const App = () => {
           onSignOut={handleSignOut}
         />
 
-        {showBookingModal && (
-          <BookingModal 
-            bookingData={bookingData}
-            onClose={() => setShowBookingModal(false)}
-            onConfirm={handleBookingConfirm}
-          />
-        )}
+        {showBookingModal && bookingData && (
+  <BookingModal 
+    bookingData={bookingData}
+    barberName={bookingData.barberName || selectedBarber?.user?.name}
+    serviceName={bookingData.serviceName || selectedService?.name}
+    onClose={() => {
+      setShowBookingModal(false);
+      setBookingData(null);
+    }}
+    onConfirm={handleBookingConfirm}
+    setCurrentView={setCurrentView}
+  />
+)}
 
         <AuthModal 
           isOpen={showAuthModal}
@@ -220,3 +254,54 @@ const App = () => {
 };
 
 export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Update the handleBookingConfirm functi
