@@ -79,7 +79,7 @@ const App = () => {
   if (!token) {
     setAuthMode('login');
     setShowAuthModal(true);
-    // Store both booking data AND the barber/service info
+    // Store booking data
     setBookingData({
       ...bookingData,
       barberName: selectedBarber?.user?.name,
@@ -227,15 +227,15 @@ const handleBackToServices = () => {
 
         {showBookingModal && bookingData && (
   <BookingModal 
+  setCurrentView={setCurrentView}
     bookingData={bookingData}
-    barberName={bookingData.barberName || selectedBarber?.user?.name}
-    serviceName={bookingData.serviceName || selectedService?.name}
+    barberName={bookingData.barberName}
+    serviceName={bookingData.serviceName}
     onClose={() => {
       setShowBookingModal(false);
       setBookingData(null);
     }}
     onConfirm={handleBookingConfirm}
-    setCurrentView={setCurrentView}
   />
 )}
 

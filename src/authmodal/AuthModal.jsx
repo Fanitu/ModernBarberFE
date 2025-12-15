@@ -275,24 +275,6 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login', onSuccess }) => {
             </button>
           </p>
         </div>
-
-        <div className="auth-divider">
-          <span>or</span>
-        </div>
-
-        <div className="auth-social-login">
-          <p className="social-login-title">{socialText}</p>
-          <div className="social-buttons">
-            <button className="social-btn google-btn" disabled={loading}>
-              <span className="social-icon google-icon">G</span>
-              Google
-            </button>
-            <button className="social-btn facebook-btn" disabled={loading}>
-              <span className="social-icon facebook-icon">f</span>
-              Facebook
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );

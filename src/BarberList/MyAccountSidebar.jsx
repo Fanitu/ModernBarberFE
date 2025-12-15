@@ -13,7 +13,8 @@ const MyAccountSidebar = ({ isOpen, onClose, onLanguageChange }) => {
   const fetchUserBookings = async () => {
     try {
       const response = await bookingAPI.getUserBookings();
-      setUserBookings(response.data || []);
+      console.log(response.data.data)
+      setUserBookings(response.data.data || []);
     } catch (error) {
       console.error('Error fetching bookings:', error);
     }
@@ -61,15 +62,16 @@ const MyAccountSidebar = ({ isOpen, onClose, onLanguageChange }) => {
           <p>No bookings yet</p>
         ) : (
           <div className="bookings-list">
-            {userBookings.map((booking, index) => (
+            {userBookings?.map((booking, index) => (
               <div key={index} className="booking-item">
-                <span>{new Date(booking.date).toLocaleDateString()}</span>
+                <span className="booking-item-time">{new Date(booking.bookingdate).toLocaleDateString()}</span>
                 <span className={`status-${booking.status}`}>{booking.status}</span>
                 {booking.paymentUrl && (
                   <a href={booking.paymentUrl} target="_blank" rel="noopener noreferrer">
                     Receipt
                   </a>
                 )}
+                <span>{booking.service.name}</span>
               </div>
             ))}
           </div>
