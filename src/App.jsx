@@ -1,307 +1,101 @@
-// App.jsx - Updated with AuthModal integration
-import React, { useState, useEffect } from 'react';
-import Header from './layout/Header.jsx';
-import HeroSlider from './layout/HeroSlider.jsx';
-import WhyChooseUs from './layout/WhyChooseus.jsx';
-import Testimonials from './layout/Testimonial.jsx';
-import ContactForm from './layout/ContractForm.jsx';
-import BarbersList from './BarberList/BarberList.jsx';
-import Availability from './BarberList/Availability.jsx';
-import BookingModal from './BarberList/BookingModal.jsx';
-import MyAccountSidebar from './BarberList/MyAccountSidebar.jsx';
-import FooterNav from './layout/FooterNav.jsx';
-import Footer from './layout/Footer.jsx';
-import AuthModal from './authmodal/AuthModal.jsx';
-import './index.css';
-import { authAPI, barberAPI, bookingAPI } from './apiServece/apiService.jsx';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import LoadingSpinner from './common/LoadingSpinner.jsx';
+import PublicLayout from './layout/PublicLayout.jsx';
+import AuthService from './service/authService.jsx';
 
-// Theme Context
-const ThemeContext = React.createContext();
+// Lazy load dashboard components
+const BarberDashboard = lazy(() => import('./Dashboard/BarberDashboard.jsx'));
+const AdminDashboard = lazy(() => import('./Dashboard/AdminDashboard.jsx'));
+const ClientDashboard = lazy(() => import('./Dashboard/ClienDashboard.jsx'));
 
-// Main App Component
 const App = () => {
-
-  const [theme, setTheme] = useState('light');
-  const [currentView, setCurrentView] = useState('home');
-  const [showAccountSidebar, setShowAccountSidebar] = useState(false);
-  const [showAuthModal, setShowAuthModal] = useState(false);
-  const [authMode, setAuthMode] = useState('login');
-  const [barbers, setBarbers] = useState([]);
-  const [selectedBarber, setSelectedBarber] = useState(null);
-  const [selectedService, setSelectedService] = useState(null);
-  const [showBookingModal, setShowBookingModal] = useState(false);
-  const [bookingData, setBookingData] = useState(null);
-  const [language, setLanguage] = useState('english');
   const [user, setUser] = useState(null);
-  const [previousView, setPreviousView] = useState('home');
-
-  // Check if user is logged in on mount
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    const storedUser = localStorage.getItem('user');
-    
-    if (token && storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch barbers data
-    const fetchBarbers = async () => {
-      try {
-        const response = await barberAPI.getAll();
-        setBarbers(response.data);
-      } catch (error) {
-        console.error('Error fetching barbers:', error);
-      }
-    };
-    fetchBarbers();
-  }, []);
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
-  };
-
-  const handleViewSchedule = (barber) => {
-    setSelectedBarber(barber);
-    setCurrentView('barber-detail');
-  };
-
-/*   const handleServiceSelect = (barber, service) => {
-    setSelectedBarber(barber);
-    setSelectedService(service);
-    setCurrentView('availability');
-  }; */
-
-  const handleBookTime = async (bookingData) => {
-  const token = localStorage.getItem('token');
-  
-  if (!token) {
-    setAuthMode('login');
-    setShowAuthModal(true);
-    // Store booking data
-    setBookingData({
-      ...bookingData,
-      barberName: selectedBarber?.user?.name,
-      serviceName: selectedService?.name
-    });
-    return;
-  }
-  
-  setBookingData({
-    ...bookingData,
-    barberName: selectedBarber?.user?.name,
-    serviceName: selectedService?.name
-  });
-  setShowBookingModal(true);
-};
-
-  const handleAuthSuccess = (userData) => {
-    setUser(userData);
+    console.log('🔄 App mounting - checking auth...');
     
-    // If there's pending booking data, show booking modal
-    if (bookingData) {
-      setShowBookingModal(true);
-    }
-  };
-
-  const handleSignOut = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
-    setShowAccountSidebar(false);
-  };
-
-  const handleBookingConfirm = async (completeBookingData) => {
-  if (!user) {
-    setAuthMode('login');
-    setShowAuthModal(true);
-    return;
-  }
-
-  try {
-    // Ensure data matches backend requirements
-    const bookingPayload = {
-      barberId: completeBookingData.barberId,
-      bookingdate: completeBookingData.bookingDate,
-      startTime: completeBookingData.startTime,
-      service: completeBookingData.service,
-      customerNote: completeBookingData.customerNote || ''
-    };
+    const storedUser = AuthService.getUser();
+    console.log('📦 Retrieved from AuthService:', storedUser);
     
-    await bookingAPI.create(bookingPayload);
-    
-    // Success is now handled in the BookingModal component
-    return Promise.resolve();
-  } catch (error) {
-    if (error.response?.status === 401) {
-      setAuthMode('login');
-      setShowAuthModal(true);
-      throw error;
+    if (storedUser) {
+      console.log('✅ User found, setting state:', {
+        name: storedUser.name,
+        role: storedUser.role,
+        barberId: storedUser.barberId
+      });
+      setUser(storedUser);
     } else {
-      throw new Error(error.response?.data?.message || 'Failed to create booking');
+      console.log('❌ No user found in localStorage');
     }
-  }
-};
+    
+    setLoading(false);
+    
+    // Log localStorage contents
+    console.log('🏪 localStorage contents:', {
+      user: localStorage.getItem('user'),
+      token: localStorage.getItem('token') ? 'Exists' : 'Missing'
+    });
+  }, []);
 
-const handleServiceSelect = (barber, service) => {
-  setSelectedBarber(barber);
-  setSelectedService(service);
-  setPreviousView(currentView); // Store current view
-  setCurrentView('availability');
-};
-
-const handleBackToServices = () => {
-  setCurrentView(previousView); // Go back to previous view
-};
-
-  const translations = {
-    english: {},
-    amharic: {
-      // Add Amharic translations here
+  const handleLogin = (userData, token) => {
+    console.log('🔐 handleLogin called with:', { userData, token });
+    
+    const loggedInUser = AuthService.login(userData, token);
+    console.log('📝 After AuthService.login:', loggedInUser);
+    
+    setUser(loggedInUser);
+    
+    // Force immediate dashboard redirect for non-clients
+    if (loggedInUser.role === 'barber' || loggedInUser.role === 'admin') {
+      console.log('🚀 Redirecting to dashboard for role:', loggedInUser.role);
+      window.location.href = '/dashboard';
     }
   };
+
+  const handleLogout = () => {
+    console.log('🚪 Logout initiated');
+    AuthService.logout();
+    setUser(null);
+    window.location.href = '/';
+  };
+
+  if (loading) {
+    console.log('⏳ App is loading...');
+    return <LoadingSpinner fullScreen />;
+  }
+
+  console.log('🎯 App rendering with user:', user);
+  console.log('🎯 User role:', user?.role);
+  console.log('🎯 Should show dashboard?', user && user.role !== 'client');
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      <div className={`app ${theme} ${language}`}>
-        <Header 
-          theme={theme}
-          toggleTheme={toggleTheme}
-          user={user}
-          onSignIn={() => {
-            setAuthMode('login');
-            setShowAuthModal(true);
-          }}
-          onSignUp={() => {
-            setAuthMode('register');
-            setShowAuthModal(true);
-          }}
-          onSignOut={handleSignOut}
-        />
-
-        <main className="main-content">
-          {currentView === 'home' && (
-            <>
-              <HeroSlider />
-              <WhyChooseUs />
-              <Testimonials />
-              <ContactForm />
-            </>
-          )}
-
-          {currentView === 'barbers' && (
-            <BarbersList 
-              barbers={barbers}
-              onSelectBarber={handleServiceSelect}
-              onViewSchedule={handleViewSchedule}
-            />
-          )}
-
-          {currentView === 'availability' && selectedBarber && selectedService && (
-  <Availability 
-    barber={selectedBarber}
-    service={selectedService}
-    onBook={handleBookTime}
-    onBack={handleBackToServices}
-  />
-)}
-        </main>
-
-        <Footer />
-
-        <FooterNav 
-          activeView={currentView}
-          onChangeView={setCurrentView}
-          onAccountClick={() => setShowAccountSidebar(true)}
-          user={user}
-        />
-
-        <MyAccountSidebar 
-          isOpen={showAccountSidebar}
-          onClose={() => setShowAccountSidebar(false)}
-          onLanguageChange={setLanguage}
-          user={user}
-          onSignOut={handleSignOut}
-        />
-
-        {showBookingModal && bookingData && (
-  <BookingModal 
-  setCurrentView={setCurrentView}
-    bookingData={bookingData}
-    barberName={bookingData.barberName}
-    serviceName={bookingData.serviceName}
-    onClose={() => {
-      setShowBookingModal(false);
-      setBookingData(null);
-    }}
-    onConfirm={handleBookingConfirm}
-  />
-)}
-
-        <AuthModal 
-          isOpen={showAuthModal}
-          onClose={() => {
-            setShowAuthModal(false);
-            setBookingData(null); // Clear pending booking data if modal closed
-          }}
-          initialMode={authMode}
-          onSuccess={handleAuthSuccess}
-        />
-      </div>
-    </ThemeContext.Provider>
+    <Router>
+      <Routes>
+        {/* Public routes for everyone */}
+        <Route path="/*" element={
+          <PublicLayout 
+            user={user} 
+            onLogin={handleLogin}
+            onLogout={handleLogout}
+          />
+        } />
+        
+        {/* Protected dashboard routes */}
+        <Route path="/dashboard/*" element={
+          user ? (
+            user.role === 'admin' ? <AdminDashboard user={user} onLogout={handleLogout} /> :
+            user.role === 'barber' ? <BarberDashboard user={user} onLogout={handleLogout} /> :
+            user.role === 'client' || null ? <ClientDashboard user={user} onLogout={handleLogout} /> :
+            <Navigate to="/" replace />
+          ) : (
+            <Navigate to="/" replace />
+          )
+        } />
+      </Routes>
+    </Router>
   );
 };
 
 export default App;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Update the handleBookingConfirm functi

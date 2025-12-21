@@ -23,15 +23,16 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login', onSuccess }) => {
   }, [initialMode, isOpen]);
 
   const resetForm = () => {
-    setFormData({
-      name: '',
-      email: '',
-      password: '',
-      phone: '',
-      confirmPassword: ''
-    });
+    if(!apiError){
+      setFormData({
+        name: '',
+        email: '',
+        password: '',
+        phone: '',
+        confirmPassword: ''
+      });
+    }
     setErrors({});
-    setApiError('');
   };
 
   const validateForm = () => {
@@ -77,56 +78,50 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login', onSuccess }) => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  
+  if (!validateForm()) return;
+  
+  setLoading(true);
+  setApiError('');
+  
+  try {
+    let response;
     
-    if (!validateForm()) return;
-    
-    setLoading(true);
-    setApiError('');
-    
-    try {
-      let response;
-      
-      if (mode === 'login') {
-        response = await authAPI.login({
-          email: formData.email,
-          password: formData.password
-        });
-      } else {
-        response = await authAPI.register({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          phone: formData.phone
-        });
-      }
-      
-      const { token, user } = response.data;
-      
-      // Store token and user data
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      
-      // Reset form
-      resetForm();
-      
-      // Notify parent component
-      if (onSuccess) onSuccess(user);
-      
-      // Close modal
-      onClose();
-      
-    } catch (error) {
-      setApiError(
-        error.response?.data?.message || 
-        error.response?.data?.error || 
-        'An error occurred. Please try again.'
-      );
-      console.error('Auth error:', error);
-    } finally {
-      setLoading(false);
+    if (mode === 'login') {
+      console.log('Attempting login...');
+      response = await authAPI.login({
+        email: formData.email,
+        password: formData.password
+      });
+    } else {
+      response = await authAPI.register({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone
+      });
     }
-  };
+  
+    
+    const { token, user } = response.data;
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+    resetForm();       
+    onSuccess(user, token);
+    onClose();
+    
+  } catch (error) {    
+    const errorMessage = error.response?.data?.message || 
+                        error.response?.data?.error || 
+                        'An error occurred. Please try again.';
+    
+    setApiError(errorMessage);
+  } finally {
+    console.log('Finally - setting loading false');
+    setLoading(false);
+  }
+};
 
   const switchMode = () => {
     const newMode = mode === 'login' ? 'register' : 'login';
@@ -144,10 +139,13 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login', onSuccess }) => {
   const submitText = isLoginMode ? 'Sign In' : 'Create Account';
   const switchText = isLoginMode ? "Don't have an account?" : "Already have an account?";
   const switchButtonText = isLoginMode ? 'Sign Up' : 'Sign In';
-  const socialText = isLoginMode ? 'Sign in with' : 'Sign up with';
 
   return (
-    <div className="auth-modal-overlay" onClick={onClose}>
+    <div className="auth-modal-overlay" onClick={()=>{
+      if(!loading && !apiError){
+        onClose()
+      }
+    }}>
       <div className="auth-modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="auth-modal-close" onClick={onClose}>&times;</button>
         

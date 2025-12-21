@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import ServiceList from './serviceList.jsx';
 
 const BarbersList = ({ barbers, onSelectBarber, onViewSchedule}) => {
+  console.log(barbers)
 
   const [selectBarber, setSelectBarber] = useState(null);
 
-  const handleViewSchedule = (barber) => {  
+  const handleViewSchedule = (barber) => {
+    console.log(barber)
     setSelectBarber(barber);
   }; 
   
@@ -17,7 +19,7 @@ const BarbersList = ({ barbers, onSelectBarber, onViewSchedule}) => {
        <ServiceList setSelectBarber={setSelectBarber} selectBarber={selectBarber} onSelectBarber={onSelectBarber}/>
       ) : (
         <div className="barbers-grid">
-          {barbers.data.map((barber, index) => (
+          {barbers.map((barber, index) => (
             <div key={index} className="barber-card">
               <div className="barber-image"></div>
               <div className="barber-info">

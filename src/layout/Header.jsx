@@ -10,23 +10,23 @@ const Header = ({ toggleTheme, theme, onSignIn, onSignUp, user, onSignOut }) => 
         </div>
         
         <div className="theme-toggle">
-          <button 
+          {/* <button 
             onClick={toggleTheme}
             className="theme-btn"
             aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
           >
             {theme === 'light' ? '🌙' : '☀️'}
-          </button>
+          </button> */}
         </div>
         
         <div className="auth-buttons">
           {user ? (
-            <div className="user-info">
-              <span className="user-name">Hi, {user.name}</span>
+            <>
+              <span className="user-name">Hello, {user.name}</span>
               <button className="btn-signout" onClick={onSignOut}>
                 Sign Out
               </button>
-            </div>
+            </>
           ) : (
             <>
               <button className="btn-signin" onClick={onSignIn}>
