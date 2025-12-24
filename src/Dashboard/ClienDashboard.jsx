@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useRole } from '../../../context/RoleContext';
 import { bookingAPI, barberAPI } from '../../../services/apiService';
 import DashboardLayout from '../common/DashboardLayout';
 import LoadingSpinner from '../common/LoadingSpinner';
