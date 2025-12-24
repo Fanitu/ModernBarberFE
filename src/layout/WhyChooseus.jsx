@@ -1,4 +1,4 @@
-const WhyChooseUs = () => {
+const WhyChooseus = () => {
   const features = [
     {
       title: "Traditional Expertise",
@@ -38,4 +38,4 @@ const WhyChooseUs = () => {
   );
 };
 
-export default WhyChooseUs;
+export default WhyChooseus;

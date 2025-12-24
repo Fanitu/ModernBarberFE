@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Header from './Header';
 import HeroSlider from './HeroSlider';
-import WhyChooseUs from './WhyChooseUs';
+import WhyChooseUs from './WhyChooseus';
 import Testimonials from './Testimonial';
 import ContactForm from './ContractForm';
 import BarbersList from '../BarberList/BarberList';
