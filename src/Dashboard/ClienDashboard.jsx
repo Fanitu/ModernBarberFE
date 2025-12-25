@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { bookingAPI, barberAPI } from '../apiServece/apiService';
-import DashboardLayout from '../common/DashboardLayout';
+import DashboardLayout from '../common/DashbordLayout';
 import LoadingSpinner from '../common/LoadingSpinner';
 import { 
   Calendar, 
