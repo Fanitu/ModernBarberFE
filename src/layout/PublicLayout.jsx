@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Header from './Header';
 import HeroSlider from './HeroSlider';
 import WhyChooseUs from './WhyChooseus';
+import Footer from './Footer'
 import Testimonials from './Testimonial';
 import ContactForm from './ContractForm';
 import BarbersList from '../BarberList/BarberList';
@@ -99,6 +100,7 @@ const PublicLayout = ({ user, onLogin, onLogout }) => {
                 />
                 <Testimonials />
                 <ContactForm />
+                <Footer/>
               </>
             ) : currentView === 'availability' && selectedBarber && selectedService ? (
               <Availability 
