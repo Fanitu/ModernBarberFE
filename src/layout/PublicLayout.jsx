@@ -83,6 +83,10 @@ const PublicLayout = ({ user, onLogin, onLogout }) => {
           setAuthMode('login');
           setShowAuthModal(true);
         }} 
+        onSignUp={() => {
+          setAuthMode('register');
+          setShowAuthModal(true);
+        }} 
         user={user}
         onSignOut={onLogout}
       />

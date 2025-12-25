@@ -127,6 +127,7 @@ const AuthModal = ({ isOpen, onClose, initialMode = 'login', onSuccess }) => {
     const newMode = mode === 'login' ? 'register' : 'login';
     setMode(newMode);
     resetForm();
+    console.log(newMode);
   };
 
   if (!isOpen) return null;
