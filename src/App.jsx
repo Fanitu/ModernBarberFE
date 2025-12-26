@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LoadingSpinner from './common/LoadingSpinner.jsx';
 import PublicLayout from './layout/PublicLayout.jsx';
 import AuthService from './service/authService.jsx';
+import config from './config/config.js';
 
 // Lazy load dashboard components
 const BarberDashboard = lazy(() => import('./Dashboard/BarberDashboard.jsx'));
@@ -15,7 +16,7 @@ const App = () => {
 
   useEffect(() => {
     console.log('🔄 App mounting - checking auth...');
-    console.log(`${process.env.REACT_APP_BACKEND_URL}`);
+    console.log(`${config.backendUrl}`);
     
     const storedUser = AuthService.getUser();
     console.log('📦 Retrieved from AuthService:', storedUser);
