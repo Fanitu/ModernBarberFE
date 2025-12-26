@@ -2,7 +2,7 @@ import axios from 'axios';
 import config from '../config/config';
 
 const apiService = axios.create({
-  baseURL: `${config.backendUrl}/api`,
+  baseURL: `${config.backendUrl}api`,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
