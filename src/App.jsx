@@ -13,63 +13,40 @@ const ClientDashboard = lazy(() => import('./Dashboard/ClienDashboard.jsx'));
 const App = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  console.log(config.backendUrl);
 
   useEffect(() => {
-    console.log('🔄 App mounting - checking auth...');
     
     const storedUser = AuthService.getUser();
-    console.log('📦 Retrieved from AuthService:', storedUser);
-    
     if (storedUser) {
-      console.log('✅ User found, setting state:', {
-        name: storedUser.name,
-        role: storedUser.role,
-        barberId: storedUser.barberId
-      });
       setUser(storedUser);
-    } else {
-      console.log('❌ No user found in localStorage');
     }
-    
+
     setLoading(false);
     
-    // Log localStorage contents
-    console.log('🏪 localStorage contents:', {
-      user: localStorage.getItem('user'),
-      token: localStorage.getItem('token') ? 'Exists' : 'Missing'
-    });
   }, []);
 
   const handleLogin = (userData, token) => {
-    console.log('🔐 handleLogin called with:', { userData, token });
     
     const loggedInUser = AuthService.login(userData, token);
-    console.log('📝 After AuthService.login:', loggedInUser);
     
     setUser(loggedInUser);
     
     // Force immediate dashboard redirect for non-clients
     if (loggedInUser.role === 'barber' || loggedInUser.role === 'admin') {
-      console.log('🚀 Redirecting to dashboard for role:', loggedInUser.role);
       window.location.href = '/dashboard';
     }
   };
 
   const handleLogout = () => {
-    console.log('🚪 Logout initiated');
     AuthService.logout();
     setUser(null);
     window.location.href = '/';
   };
 
   if (loading) {
-    console.log('⏳ App is loading...');
     return <LoadingSpinner fullScreen />;
   }
-
-  console.log('🎯 App rendering with user:', user);
-  console.log('🎯 User role:', user?.role);
-  console.log('🎯 Should show dashboard?', user && user.role !== 'client');
 
   return (
     <Router>
