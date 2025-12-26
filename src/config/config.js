@@ -1,6 +1,6 @@
 // src/config.js
 const config = {
-  backendUrl: process.env.REACT_APP_BACKEND_URL || 'https://barbershop-production-7443.up.railway.app/',
+  backendUrl: process.env.BACKEND_URL || 'https://barbershop-production-7443.up.railway.app/',
   isDevelopment: process.env.NODE_ENV === 'development',
   isProduction: process.env.NODE_ENV === 'production',
 };
