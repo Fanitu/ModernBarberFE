@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import ServiceList from './serviceList.jsx';
 
 const BarbersList = ({ barbers, onSelectBarber, onViewSchedule}) => {
-  console.log(barbers)
 
   const [selectBarber, setSelectBarber] = useState(null);
+  
+  console.log(barbers)
 
   const handleViewSchedule = (barber) => {
     console.log(barber)
