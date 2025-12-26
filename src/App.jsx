@@ -13,7 +13,6 @@ const ClientDashboard = lazy(() => import('./Dashboard/ClienDashboard.jsx'));
 const App = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log(config.backendUrl);
 
   useEffect(() => {
     
