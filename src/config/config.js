@@ -1,6 +1,6 @@
 // src/config.js
 const config = {
-  backendUrl: process.env.REACT_APP_BACKEND_URL || 'https://barber-shop-nine-kappa.vercel.app/',
+  backendUrl: process.env.REACT_APP_BACKEND_URL || 'https://barber-shop-lilac-ten.vercel.app/',
   isDevelopment: process.env.NODE_ENV === 'development',
   isProduction: process.env.NODE_ENV === 'production',
 };
