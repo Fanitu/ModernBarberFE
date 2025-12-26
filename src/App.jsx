@@ -16,7 +16,6 @@ const App = () => {
 
   useEffect(() => {
     console.log('🔄 App mounting - checking auth...');
-    console.log(`${config.backendUrl}`);
     
     const storedUser = AuthService.getUser();
     console.log('📦 Retrieved from AuthService:', storedUser);
