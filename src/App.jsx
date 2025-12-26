@@ -30,17 +30,11 @@ const App = () => {
     const loggedInUser = AuthService.login(userData, token);
     
     setUser(loggedInUser);
-    
-    // Force immediate dashboard redirect for non-clients
-    if (loggedInUser.role === 'barber' || loggedInUser.role === 'admin') {
-      window.location.href = '/dashboard';
-    }
   };
 
   const handleLogout = () => {
     AuthService.logout();
     setUser(null);
-    window.location.href = '/';
   };
 
   if (loading) {
