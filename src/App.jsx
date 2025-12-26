@@ -1,4 +1,3 @@
-process.dot.env
 import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoadingSpinner from './common/LoadingSpinner.jsx';
