@@ -73,7 +73,7 @@ const App = () => {
           
           <Route path="/client/*" element={
             user?.role === 'client' ? 
-              <ClientDashboard user={user} onLogout={handleLogout} /> : 
+              <PublicLayout user={user} onLogout={handleLogout} /> : 
               <Navigate to="/#/login" replace />
           } />
         </Routes>
