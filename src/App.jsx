@@ -2,7 +2,7 @@ import React, { Suspense, lazy, useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import LoadingSpinner from './common/LoadingSpinner.jsx';
 import PublicLayout from './layout/PublicLayout.jsx';
-import Dashboard from './components/Dashboard.jsx'; // Add this
+import Dashboard from './Dashboard/Dashboard.jsx'; // Add this
 import AuthService from './service/authService.jsx';
 
 // Lazy load ONLY the role-specific dashboards
