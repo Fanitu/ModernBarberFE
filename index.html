@@ -9,6 +9,33 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    
+    <script>
+  // AUTO-REDIRECT SCRIPT: Fixes white screen issue
+  window.addEventListener('load', function() {
+    setTimeout(function() {
+      try {
+        // Check if user is logged in
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+          const user = JSON.parse(userStr);
+          const currentHash = window.location.hash;
+          
+          // If on home/login page, redirect to dashboard
+          if (!currentHash || currentHash === '#/' || currentHash === '#/login') {
+            if (user.role === 'admin') {
+              window.location.hash = '#/admin';
+            } else if (user.role === 'barber') {
+              window.location.hash = '#/barber';
+            } else if (user.role === 'client') {
+              window.location.hash = '#/client';
+            }
+          }
+        }
+      } catch (error) {
+        console.log('Auto-redirect error:', error);
+      }
+    }, 500); // Half second delay
+  });
+</script>
   </body>
 </html>
