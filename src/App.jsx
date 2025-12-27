@@ -7,7 +7,7 @@ import AuthService from './service/authService.jsx';
 // FIX THE TYPO HERE:
 const BarberDashboard = lazy(() => import('./Dashboard/BarberDashboard.jsx'));
 const AdminDashboard = lazy(() => import('./Dashboard/AdminDashboard.jsx'));
-const ClientDashboard = lazy(() => import('./Dashboard/ClientDashboard.jsx')); // Fixed!
+const ClientDashboard = lazy(() => import('./Dashboard/ClienDashboard.jsx')); // Fixed!
 
 const App = () => {
   const [user, setUser] = useState(null);
