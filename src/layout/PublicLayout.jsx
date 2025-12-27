@@ -58,10 +58,7 @@ const PublicLayout = ({ user, onLogin, onLogout }) => {
     // Call onLogin from props
     onLogin(userData, token);
     
-    // If user is barber or admin, redirect to dashboard
-    if (userData.role === 'barber' || userData.role === 'admin') {
-      navigate('/dashboard');
-    }
+  window.location.href = '/dashboard'
     
     // If there's pending booking data, show booking modal
     if (bookingData) {
@@ -86,7 +83,7 @@ const PublicLayout = ({ user, onLogin, onLogout }) => {
         onSignUp={() => {
           setAuthMode('register');
           setShowAuthModal(true);
-        }} 
+        }}
         user={user}
         onSignOut={onLogout}
       />
