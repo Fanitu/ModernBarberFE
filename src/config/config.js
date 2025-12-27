@@ -1,7 +1,7 @@
 // src/config.js
 const config = {
-  backendUrl: process.env.BACKEND_URL || 'https://barbershop-production-7443.up.railway.app/',
-  isDevelopment: process.env.NODE_ENV === 'development',
+  backendUrl: import.meta.env.BACKEND_URL || 'https://barbershop-production-7443.up.railway.app/',
+  isDevelopment:import.meta.env.NODE_ENV === 'development',
   isProduction: process.env.NODE_ENV === 'production',
 };
 
@@ -9,10 +9,10 @@ const config = {
 console.log('📋 App Configuration:', {
   backendUrl: config.backendUrl,
   nodeEnv: process.env.NODE_ENV,
-  allReactEnvVars: Object.keys(process.env)
+  allReactEnvVars: Object.keys(import.meta.env)
     .filter(key => key.startsWith('REACT_APP_'))
     .reduce((obj, key) => {
-      obj[key] = process.env[key];
+      obj[key] = import.meta.env[key];
       return obj;
     }, {})
 });
