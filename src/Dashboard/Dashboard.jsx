@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import LoadingSpinner from './common/LoadingSpinner';
+import LoadingSpinner from '../common/LoadingSpinner';
 import AuthService from '../service/authService';
 
 const Dashboard = () => {
