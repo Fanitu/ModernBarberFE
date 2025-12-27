@@ -157,12 +157,12 @@ const BarberDashboard = ({ user, onLogout }) => {
       <div className="barber-dashboard">
         {/* Header Section */}
         <div className="dashboard-header">
-          <div className="welcome-section">
+          {/* <div className="welcome-section">
             <h1 className="greeting">{getGreeting()}, {user?.name?.split(' ')[0] || 'Barber'}! 👋</h1>
             <p className="subtitle">Here's what's happening with your bookings today</p>
           </div>
           
-         {/*  <div className="time-filter-section">
+          <div className="time-filter-section">
             <div className="filter-buttons">
               {timeFilters.map((timeFilter) => (
                 <button

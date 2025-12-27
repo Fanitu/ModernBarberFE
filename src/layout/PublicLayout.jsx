@@ -58,8 +58,6 @@ const PublicLayout = ({ user, onLogin, onLogout }) => {
     // Call onLogin from props
     onLogin(userData, token);
     
-   
-    
     // If there's pending booking data, show booking modal
     if (bookingData) {
       setShowBookingModal(true);
