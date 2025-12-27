@@ -9,36 +9,6 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <script>
-  // Emergency fix for Vercel 404 errors
-  (function() {
-    // Check if we got a 404
-    if (document.title.includes('404') || 
-        document.body.innerText.includes('404') ||
-        window.location.pathname !== '/') {
-      
-      // Store the intended path
-      const intendedPath = window.location.pathname + window.location.search;
-      sessionStorage.setItem('redirectPath', intendedPath);
-      
-      // Redirect to root
-      if (window.location.pathname !== '/') {
-        window.history.replaceState(null, null, '/');
-        window.location.reload();
-      }
-    }
     
-    // On page load, check if we need to redirect
-    window.addEventListener('load', function() {
-      const redirectPath = sessionStorage.getItem('redirectPath');
-      if (redirectPath && redirectPath !== '/') {
-        sessionStorage.removeItem('redirectPath');
-        setTimeout(function() {
-          window.location.href = redirectPath;
-        }, 100);
-      }
-    });
-  })();
-</script>
   </body>
 </html>
