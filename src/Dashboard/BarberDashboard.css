@@ -58,6 +58,7 @@
 /* Reset and Base Styles */
 .barber-dashboard {
   min-height: 100vh;
+  width: 100%;
   background: var(--bg-primary);
   padding: 24px;
   position: relative;
