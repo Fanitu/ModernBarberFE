@@ -19,8 +19,8 @@ const Footer = () => {
         
         <div className="footer-section">
           <h4>Contact Info</h4>
-          <p>📍 Bole, Addis Ababa</p>
-          <p>📞 +251 91 234 5678</p>
+          <p>📍 GOMO 1 Near Medhin Alem Church, Addis Ababa</p>
+          <p>📞 +251 907268809</p>
           <p>✉️ info@habeshabarbers.com</p>
         </div>
         

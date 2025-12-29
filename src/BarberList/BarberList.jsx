@@ -14,7 +14,7 @@ const BarbersList = ({ barbers, onSelectBarber, onViewSchedule}) => {
   
 
   return (
-    <div className="barbers-list">
+    <div className="barbers-list" id="barbersList">
       <h2 className="section-title">Our Professional Barbers</h2>
       {selectBarber ? (
        <ServiceList setSelectBarber={setSelectBarber} selectBarber={selectBarber} onSelectBarber={onSelectBarber}/>

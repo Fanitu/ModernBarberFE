@@ -7,7 +7,9 @@ const HeroSlider = () => {
     {
       text: "With Experienced and Special Barbers we can Make whatever Style you want",
       buttonText: "Book Now",
-      buttonAction: () => console.log("Book Now clicked"),
+      buttonAction: () => {
+        document.getElementById('barbersList').scrollIntoView({ behavior: 'smooth' });
+      },
       imageClass: "slide-1"
     },
     {
@@ -21,13 +23,17 @@ const HeroSlider = () => {
     {
       text: "Precision Haircuts with Traditional Ethiopian Flair",
       buttonText: "View Styles",
-      buttonAction: () => console.log("View Styles clicked"),
+       buttonAction: () => {
+        document.getElementById('barbersList').scrollIntoView({ behavior: 'smooth' });
+      },
       imageClass: "slide-3"
     },
     {
       text: "Walk in as a Customer, Walk out as Royalty",
       buttonText: "Our Services",
-      buttonAction: () => console.log("Services clicked"),
+       buttonAction: () => {
+        document.getElementById('barbersList').scrollIntoView({ behavior: 'smooth' });
+      },
       imageClass: "slide-4"
     }
   ];
