@@ -4583,3 +4583,67 @@ body {
     min-height: 250px;
   }
 }
+
+
+
+
+/*Managing the barber dashboard ui*/
+
+/* BookingTable.css - Mobile Optimized */
+
+.booking-table {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.booking-table table {
+  width: 100%;
+  min-width: 650px; /* Ensures table is scrollable on mobile */
+}
+
+/* Mobile-specific styles */
+@media (max-width: 640px) {
+  .booking-table {
+    margin: 0 -16px;
+    width: calc(100% + 32px);
+  }
+  
+  .booking-table table {
+    min-width: 100%;
+  }
+  
+  /* Compact view for mobile */
+  .booking-table.compact th,
+  .booking-table.compact td {
+    padding: 8px 6px;
+    font-size: 12px;
+  }
+  
+  /* Hide less important columns on mobile */
+  .booking-table.compact th:nth-child(4),
+  .booking-table.compact td:nth-child(4),
+  .booking-table.compact th:nth-child(5),
+  .booking-table.compact td:nth-child(5) {
+    display: none;
+  }
+  
+  /* Make action buttons smaller */
+  .booking-table button {
+    padding: 4px 8px;
+    font-size: 11px;
+    min-width: 60px;
+  }
+}
+
+/* For tablets */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .booking-table {
+    font-size: 14px;
+  }
+  
+  .booking-table th,
+  .booking-table td {
+    padding: 10px 8px;
+  }
+}

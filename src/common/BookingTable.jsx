@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { bookingAPI }  from '../apiServece/apiService.jsx'
 import { 
   Clock, 
   User, 
@@ -22,6 +23,14 @@ const BookingTable = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  
+  const DeleteBooking = async (bookingId) =>{
+    if(!bookingId)return;
+
+   const res =  await bookingAPI.cancelBooking(bookingId,{status: 'cancelled'})
+   alert(res.message);
+
+  }
 
   // Helper functions that were missing
   const getStatusColor = (status) => {
@@ -210,7 +219,7 @@ const BookingTable = ({
                       )}
                       {(booking.status === 'pending' || booking.status === 'confirmed') && (
                         <button
-                          onClick={() => onStatusUpdate(booking._id, 'cancelled')}
+                          onClick={() => DeleteBooking(booking._id)}
                           className="table-btn cancel"
                         >
                           Cancel
