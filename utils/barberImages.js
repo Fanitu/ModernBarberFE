@@ -1,4 +1,5 @@
 import sirakIssak from '../src/assets/Sirak Issak.jpg'
+import defaultImage from '../src/assets/default.jpg'
 
 // utils/barberImages.js
 const barberImages = {
@@ -9,7 +10,7 @@ const barberImages = {
 };
 
 export const getBarberImage = (barberName) => {
-  return barberImages[barberName] || require('../src/assets/default.jpg');
+  return barberImages[barberName] || defaultImage;
 };
 
 export default barberImages;
