@@ -20,10 +20,14 @@ const BarbersList = ({ barbers, onSelectBarber, onViewSchedule}) => {
        <ServiceList setSelectBarber={setSelectBarber} selectBarber={selectBarber} onSelectBarber={onSelectBarber}/>
       ) : (
         <div className="barbers-grid">
-          {barbers.map((barber, index) => (
+          {barbers.map((barber, index) => {
+            const imageName = barber.user.name.toLowerCase().replace(/\s+/g,'-');
+            console.log(imageName);
+            
+            return (
             <div key={index} className="barber-card">
               <div className="barber-image">
-                  <img src={`../assets/${barber.user.name}`.jpg} alt={`${barber.user.name}-${barber.specialization}`} loading="lazy" onError={(e)=>{
+                  <img src={`../assets/${imageName}.jpg`} alt={`${barber.user.name}-${barber.specialization}`} loading="lazy" onError={(e)=>{
 
                 e.target.onerror = null;
                 e.target.src=require('../assets/default.jpg')}}/>
@@ -40,7 +44,7 @@ const BarbersList = ({ barbers, onSelectBarber, onViewSchedule}) => {
                 View Schedule
               </button>
             </div>
-          ))}
+          )})}
         </div>
       )}
     </div>
