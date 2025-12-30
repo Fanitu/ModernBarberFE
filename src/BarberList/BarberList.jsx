@@ -25,7 +25,10 @@ const BarbersList = ({ barbers, onSelectBarber, onViewSchedule}) => {
                   <img src={getBarberImage(barber.user.name)} alt={`${barber.user.name}-${barber.specialization}`} loading="lazy" onError={(e)=>{
 
                 e.target.onerror = null;
-                e.target.src=require('../assets/default.jpg')}}/>
+                e.target.src=require('../assets/default.jpg')}}
+                width="100%"
+                height="85%"
+                />
               </div>
               <div className="barber-info">
                 <h3>{barber.user.name}</h3>
