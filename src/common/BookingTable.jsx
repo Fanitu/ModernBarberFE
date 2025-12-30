@@ -28,6 +28,7 @@ const BookingTable = ({
     if(!bookingId)return;
 
    const res =  await bookingAPI.cancelBooking(bookingId,{status: 'cancelled'})
+   console.log(res)
    alert(res.message);
 
   }
