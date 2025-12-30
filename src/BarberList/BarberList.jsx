@@ -22,7 +22,12 @@ const BarbersList = ({ barbers, onSelectBarber, onViewSchedule}) => {
         <div className="barbers-grid">
           {barbers.map((barber, index) => (
             <div key={index} className="barber-card">
-              <div className="barber-image"></div>
+              <div className="barber-image">
+                  <img src={`../assets/${barber.name}`.jpg} alt={`${barber.name}-${barber.speciality}`} loading="lazy" onError={(e)=>{
+
+                e.target.onerror = null;
+                e.target.src=require('../assets/default.jpg')}}/>
+              </div>
               <div className="barber-info">
                 <h3>{barber.user.name}</h3>
                 <p>{barber.specialization}</p>
