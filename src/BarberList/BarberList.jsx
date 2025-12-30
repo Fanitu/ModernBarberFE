@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import ServiceList from './serviceList.jsx';
+import { getBarberImage } from '../../utils/barberImages.js'; 
 
 const BarbersList = ({ barbers, onSelectBarber, onViewSchedule}) => {
 
   const [selectBarber, setSelectBarber] = useState(null);
-  
-  console.log(barbers)
 
   const handleViewSchedule = (barber) => {
     console.log(barber)
@@ -20,14 +19,10 @@ const BarbersList = ({ barbers, onSelectBarber, onViewSchedule}) => {
        <ServiceList setSelectBarber={setSelectBarber} selectBarber={selectBarber} onSelectBarber={onSelectBarber}/>
       ) : (
         <div className="barbers-grid">
-          {barbers.map((barber, index) => {
-            const imageName = barber.user.name.toLowerCase().replace(/\s+/g,'-');
-            console.log(imageName);
-            
-            return (
+          {barbers.map((barber, index) => (
             <div key={index} className="barber-card">
               <div className="barber-image">
-                  <img src={`../assets/${imageName}.jpg`} alt={`${barber.user.name}-${barber.specialization}`} loading="lazy" onError={(e)=>{
+                  <img src={getBarberImage(barber.user.name)} alt={`${barber.user.name}-${barber.specialization}`} loading="lazy" onError={(e)=>{
 
                 e.target.onerror = null;
                 e.target.src=require('../assets/default.jpg')}}/>
@@ -44,7 +39,7 @@ const BarbersList = ({ barbers, onSelectBarber, onViewSchedule}) => {
                 View Schedule
               </button>
             </div>
-          )})}
+          ))}
         </div>
       )}
     </div>
