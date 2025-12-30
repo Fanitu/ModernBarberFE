@@ -1,7 +1,9 @@
+import sirakIssak from '../src/assets/Sirak Issak.jpg'
+
 // utils/barberImages.js
 const barberImages = {
   // Manually map each barber name to their image
-  'sirak': require("../src/assets/Sirak Issak.jpg"),
+  'Sirak Issak': sirakIssak,
   
   // Add all your barbers here
 };
