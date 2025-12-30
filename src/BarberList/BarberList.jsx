@@ -23,7 +23,7 @@ const BarbersList = ({ barbers, onSelectBarber, onViewSchedule}) => {
           {barbers.map((barber, index) => (
             <div key={index} className="barber-card">
               <div className="barber-image">
-                  <img src={`../assets/${barber.name}`.jpg} alt={`${barber.name}-${barber.speciality}`} loading="lazy" onError={(e)=>{
+                  <img src={`../assets/${barber.user.name}`.jpg} alt={`${barber.user.name}-${barber.specialization}`} loading="lazy" onError={(e)=>{
 
                 e.target.onerror = null;
                 e.target.src=require('../assets/default.jpg')}}/>
