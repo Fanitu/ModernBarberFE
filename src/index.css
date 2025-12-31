@@ -414,6 +414,7 @@ body {
 }
 
 .barber-card {
+  width: auto;
   background: var(--card-bg);
   border-radius: 10px;
   overflow: hidden;
@@ -2632,6 +2633,7 @@ body {
 }
 
 .barber-card {
+  width: auto;
   background: var(--card-bg);
   border-radius: 10px;
   overflow: hidden;
