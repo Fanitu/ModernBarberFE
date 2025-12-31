@@ -267,10 +267,13 @@ body {
 
 .app.dark .feature-card {
   background: #333;
+
 }
 
 .section-title-barbers{
     color:black;
+    margin:1rem;
+    font-size:20px;
 }
 
 .feature-card:hover {
