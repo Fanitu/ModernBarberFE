@@ -431,6 +431,7 @@ body {
 }
 
 .barber-image {
+  margin: auto;
   height: 250px;
   background: grey;
 }
