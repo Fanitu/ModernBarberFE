@@ -26,7 +26,7 @@ const BarbersList = ({ barbers, onSelectBarber, onViewSchedule}) => {
 
                 e.target.onerror = null;
                 e.target.src=require('../assets/default.jpg')}}
-                width="100%"
+                width="80%"
                 height="100%"
                 />
               </div>

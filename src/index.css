@@ -431,7 +431,7 @@ body {
 
 .barber-image {
   height: 200px;
-  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  background: grey;
 }
 
 .barber-info {
@@ -2648,7 +2648,7 @@ body {
 
 .barber-image {
   height: 200px;
-  background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+  background: grey;
 }
 
 .barber-info {
