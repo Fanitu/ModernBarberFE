@@ -2633,7 +2633,7 @@ body {
 }
 
 .barber-card {
-  width: auto;
+  max-width: 400px;
   background: var(--card-bg);
   border-radius: 10px;
   overflow: hidden;
